@@ -13,7 +13,7 @@ Built with [CustomTkinter](https://github.com/TomSchimansky/CustomTkinter) for a
 </div>
 
 <p align="center">
-  <img src="assets/screenshot.png" alt="Pydora Screenshot" width="90%">
+  <img src="assets/screenshot1.png" alt="Pydora Screenshot" width="90%">
 </p>
 
 ---
