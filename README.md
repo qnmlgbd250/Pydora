@@ -1,87 +1,90 @@
-# Python 脚本监控器
+<div align="center">
 
-基于 **CustomTkinter** 构建的 Windows 桌面 GUI 工具，用于管理和监控 Python 脚本的运行状态。
+# Pydora
 
----
+**A lightweight Python script monitor with real-time logging, resource tracking, and process management.**
 
-## 界面预览
+Built with [CustomTkinter](https://github.com/TomSchimansky/CustomTkinter) for a modern dark-themed UI on Windows.
 
-```
-┌──────────────────┬─────────────────────────────────────────────────────┐
-│  脚本列表   [＋]  │  my_script.py    [▶启动] [■停止] [⏸暂停] [⚙配置] [🗑删除] │
-│ ─────────────── │ ───────────────────────────────────────────────────── │
-│ ● 脚本A  运行中  │                                                       │
-│ ○ 脚本B  已停止  │  [搜索关键词...]              [清除] [复制] [✓自动滚动]  │
-│ ● 脚本C  已暂停  │                                                       │
-│                  │  实时日志输出区（支持关键词高亮）                        │
-│                  │                                                       │
-│ [▶启动全部][■停止] │ ─────────────────────────────────────────────────── │
-│                  │  CPU: 2.1%  内存: 48MB  虚拟: 120MB  线程: 4  PID: 1234 │
-└──────────────────┴─────────────────────────────────────────────────────┘
-```
+![Python](https://img.shields.io/badge/Python-3.10+-blue?logo=python&logoColor=white)
+![Platform](https://img.shields.io/badge/Platform-Windows-0078d4?logo=windows&logoColor=white)
+![License](https://img.shields.io/badge/License-MIT-green)
+
+</div>
+
+<p align="center">
+  <img src="assets/screenshot.png" alt="Pydora Screenshot" width="90%">
+</p>
 
 ---
 
-## 功能列表
+## Features
 
-| 功能 | 说明 |
-|------|------|
-| 添加脚本 | 浏览选择 .py 文件，设置名称、启动参数 |
-| 启动/停止/暂停 | 对单个脚本进行完整生命周期控制 |
-| 暂停/恢复 | 使用 psutil suspend/resume（Windows 支持） |
-| 启动全部/停止全部 | 批量控制所有脚本 |
-| 实时日志 | 脚本 stdout/stderr 实时输出，带时间戳 |
-| 日志搜索 | 输入关键词自动高亮所有匹配项（橙色背景）|
-| 清除日志 | 清空当前脚本日志显示 |
-| 复制日志 | 全量复制到剪贴板 |
-| 自动滚动 | 可开关，开启时日志自动跟随最新行 |
-| 资源监控 | CPU、RSS内存、虚拟内存、线程数、PID、运行时长 |
-| 配置脚本 | 编辑已有脚本的名称/路径/参数 |
-| 删除脚本 | 停止并从列表移除 |
-| 自动重启 | 进程自然退出后自动重新启动 |
-| 配置持久化 | 脚本列表保存到 scripts_config.json，下次自动加载 |
+- **Script Management** -- Add, configure, and remove Python scripts via GUI
+- **Process Control** -- Start / Stop / Pause / Resume individual or all scripts
+- **Real-time Logs** -- Live stdout/stderr with timestamps and keyword search highlighting
+- **Resource Monitoring** -- CPU, memory (RSS/VMS), threads, PID, and uptime per script
+- **Auto Restart** -- Automatically restart scripts on abnormal exit
+- **Multi-interpreter** -- Specify custom Python interpreters (venv, uv, etc.)
+- **Feishu Alerts** -- Optional webhook notification on script crash
+- **Persistent Config** -- Script list saved to `scripts_config.json`, restored on launch
 
----
+## Quick Start
 
-## 安装依赖
+### Prerequisites
+
+- Python 3.10+
+- Windows 10/11
+
+### Install & Run
 
 ```bash
 pip install customtkinter psutil
-```
-
----
-
-## 启动方式
-
-```bash
 python script_monitor.py
 ```
 
----
-
-## 文件说明
+## Project Structure
 
 ```
-script_monitor.py      主程序（单文件）
-scripts_config.json    脚本配置（运行后自动生成）
-requirements.txt       依赖列表
+.
+├── script_monitor.py       # Main application (single file)
+├── scripts_config.json     # Auto-generated script configuration
+├── assets/
+│   └── screenshot.png      # UI screenshot
+└── README.md
 ```
 
----
+## Status Indicators
 
-## 状态颜色说明
+| Color  | Status    | Description            |
+|--------|-----------|------------------------|
+| Green  | Running   | Script is active       |
+| Gray   | Stopped   | Script is not running  |
+| Orange | Paused    | Process suspended      |
+| Red    | Error     | Startup/execution fail |
 
-| 颜色 | 状态 |
-|------|------|
-| 🟢 绿色 | 运行中 |
-| ⚫ 灰色 | 已停止 |
-| 🟠 橙色 | 已暂停 |
-| 🔴 红色 | 错误 |
+## Configuration
 
----
+Each script entry in `scripts_config.json` supports:
 
-## 注意事项
+```jsonc
+{
+  "name": "My Script",           // Display name
+  "path": "/path/to/script.py",  // Script file path
+  "args": "--port 8080",         // CLI arguments
+  "interpreter": "",             // Custom Python path (empty = default)
+  "auto_restart": false,         // Restart on exit
+  "feishu_webhook": ""           // Feishu bot webhook URL
+}
+```
 
-- 暂停功能依赖 `psutil.Process.suspend()`，需要对目标进程有权限
-- 程序关闭时会自动停止所有正在运行的脚本
-- 自动重启仅在脚本曾经手动启动后、进程自然退出时触发
+## Notes
+
+- Pause/Resume uses `psutil.Process.suspend()` -- requires appropriate process permissions
+- All running scripts are automatically stopped when the application closes
+- Auto-restart only triggers after a script has been manually started at least once
+- Child process output is forced to UTF-8 to avoid encoding issues on Windows
+
+## License
+
+MIT
